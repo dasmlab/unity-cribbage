@@ -1,4 +1,4 @@
-# Unity Cribbage Game Setup Guide
+# Unity Cribbage Game Setup Guide (Unity 6.1+)
 
 ## Prerequisites
 
@@ -14,9 +14,20 @@
 4. Name it "CribbageGame"
 5. Choose location and create project
 
-## Step 2: Import Project Structure
+## Step 2: Input System Setup (Unity 6.1+)
 
-1. Copy all scripts from `Assets/Scripts/` to your Unity project
+1. In the Project window, locate the default `InputSystem_Actions.inputactions` asset in `Assets/`.
+2. Double-click to open it in the Input Actions editor.
+3. Under the **Player** action map, add these actions:
+   - **Click**: Action Type = Button, Binding = Mouse/Left Button
+   - **Drag**: Action Type = Button, Binding = Mouse/Left Button (can use interaction/hold if desired)
+   - **Cancel**: Action Type = Button, Binding = Keyboard/Escape
+4. Save the asset. Unity will auto-generate a C# class called `InputSystem_Actions`.
+5. (Optional) Under the **UI** action map, ensure you have standard UI navigation actions.
+
+## Step 3: Import Project Structure
+
+1. Copy all scripts from `Assets/Scripts/` to your Unity project.
 2. Create the following folder structure in your Unity project:
    ```
    Assets/
@@ -30,19 +41,14 @@
    └── Scenes/
    ```
 
-## Step 3: Configure Input System
+## Step 4: Configure InputManager Script
 
-1. Go to **Edit > Project Settings > Player**
-2. Set **Active Input Handling** to "Both" or "Input System Package (New)"
-3. Create Input Action Asset:
-   - Right-click in Project window > Create > Input Actions
-   - Name it "GameInput"
-   - Add the following actions:
-     - **Click** (Mouse/leftButton)
-     - **Drag** (Mouse/leftButton)
-     - **Cancel** (Keyboard/escape)
+1. The `InputManager` script now uses the generated `InputSystem_Actions` class.
+2. No need to assign an InputActionAsset in the Inspector.
+3. The script will subscribe to `Player/Click`, `Player/Drag`, and `Player/Cancel` actions in `OnEnable` and unsubscribe in `OnDisable`.
+4. All input handling is routed through the generated class.
 
-## Step 4: Create Main Scene
+## Step 5: Create Main Scene
 
 1. Create a new scene: **File > New Scene**
 2. Save as "GameScene"
@@ -62,7 +68,7 @@ GameScene
 └── Main Camera
 ```
 
-## Step 5: Create UI Layout
+## Step 6: Create UI Layout
 
 ### Canvas Setup:
 1. Create Canvas: **GameObject > UI > Canvas**
@@ -91,7 +97,7 @@ GameScene
    - Add buttons: Deal, Reset
    - Add status text
 
-## Step 6: Create Card Prefab
+## Step 7: Create Card Prefab
 
 1. Create empty GameObject
 2. Add **Image** component (card background)
@@ -103,14 +109,14 @@ GameScene
 5. Configure CardDisplay component
 6. Create Prefab from GameObject
 
-## Step 7: Create Peg Prefab
+## Step 8: Create Peg Prefab
 
 1. Create empty GameObject
 2. Add **Image** component (peg sprite)
 3. Add **Rigidbody2D** (if needed for physics)
 4. Create Prefab from GameObject
 
-## Step 8: Configure Components
+## Step 9: Configure Components
 
 ### GameManager:
 - Assign references to UIManager, CribbageBoard
@@ -128,9 +134,9 @@ GameScene
 - Assign score text elements
 
 ### InputManager:
-- Assign Input Action Asset
+- No need to assign InputActionAsset. The script uses the generated class.
 
-## Step 9: Test Backend Connection
+## Step 10: Test Backend Connection
 
 1. Ensure Go server is running:
    ```bash
@@ -143,7 +149,7 @@ GameScene
    - `GET http://localhost:8001/status`
    - `POST http://localhost:8001/reset`
 
-## Step 10: Run and Test
+## Step 11: Run and Test
 
 1. Press Play in Unity
 2. Click "Deal" button
@@ -157,7 +163,7 @@ GameScene
 
 1. **Script compilation errors**: Ensure all scripts are in correct namespaces
 2. **Missing references**: Check all SerializeField assignments in Inspector
-3. **Input System errors**: Verify Input Action Asset is assigned
+3. **Input System errors**: Make sure InputSystem_Actions is generated and up to date
 4. **Network errors**: Check server URL and CORS settings
 5. **UI layout issues**: Verify Canvas Scaler settings
 
